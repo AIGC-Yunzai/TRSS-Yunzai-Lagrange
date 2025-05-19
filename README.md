@@ -1,3 +1,9 @@
+# Fork概要
+
+- 仅针对lagrange作适配器修改
+
+
+
 <div align="center">
 
 # TRSS-Yunzai
@@ -29,10 +35,9 @@ Yunzai 应用端，支持多账号，支持协议端：OneBotv11、ComWeChat、G
 
 <details><summary>脚本安装</summary>
 
-- [🌌 TRSS](https://TRSS.me)
-- [🔼 Vercel](https://TRSS-Script.Vercel.app)
-- [🐱 GitHub](https://TimeRainStarSky.GitHub.io/TRSS_Script)
-- [🇬 Gitee](https://Gitee.com/TimeRainStarSky/TRSS_Script)
+```bash
+
+```
 
 </details>
 
@@ -46,9 +51,8 @@ Yunzai 应用端，支持多账号，支持协议端：OneBotv11、ComWeChat、G
 请根据网络情况选择使用 GitHub 或 Gitee 安装
 
 ```sh
-git clone --depth 1 https://github.com/TimeRainStarSky/Yunzai
-git clone --depth 1 https://gitee.com/TimeRainStarSky/Yunzai
-cd Yunzai
+git clone https://github.com/AIGC-Yunzai/Trss-Yunzai-lagrange.git ./TRSS-Yunzai
+cd TRSS-Yunzai
 ```
 
 2. 安装 [pnpm](https://pnpm.io/zh/installation) 和依赖
