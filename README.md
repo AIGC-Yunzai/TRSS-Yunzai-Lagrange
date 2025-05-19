@@ -5,12 +5,12 @@
 
 ## 已调整适配器适配
 
-| method              | api                    | about                          |
-| ------------------- | ---------------------- | ------------------------------ |
-| getFriendMsgHistory | get_friend_msg_history | 适配 message_id 以获取历史消息 |
-| getGroupMsgHistory  | get_group_msg_history  | 适配 message_id 以获取历史消息 |
-| sendFriendFile      | upload_private_file    | 适配 file 链接, 仅支持本地Path |
-| sendGroupFile       | upload_group_file      | 适配 file 链接, 仅支持本地Path |
+| method              | api                    | about                              |
+| ------------------- | ---------------------- | ---------------------------------- |
+| getFriendMsgHistory | get_friend_msg_history | 适配 message_id 以获取历史消息     |
+| getGroupMsgHistory  | get_group_msg_history  | 适配 message_id 以获取历史消息     |
+| sendFriendFile      | upload_private_file    | 发送文件，适配 file 仅支持本地Path |
+| sendGroupFile       | upload_group_file      | 发送文件，适配 file 仅支持本地Path |
 
 ## 已调整参数
 
@@ -22,9 +22,14 @@
 
 ## 安装方法
 
-### 切换 Git 仓库
+### 方法一 常规安装
+
+- 看 [安装教程](#安装教程)
+
+### 方法二 切换 TRSS 版本到本仓库
 
 ```bash
+# 在你的 TRSS 根目录执行
 git remote set-url origin https://github.com/AIGC-Yunzai/TRSS-Yunzai-Lagrange.git
 # 或使用 Git 代理：
 # git remote set-url origin https://ghfast.top/https://github.com/AIGC-Yunzai/TRSS-Yunzai-Lagrange.git
@@ -32,10 +37,10 @@ git fetch --all
 git reset --hard origin/main
 ```
 
-### 直接替换文件
+### 方法三 直接替换文件
 
 ```text
-直接把本仓库的 plugins\adapter\OneBotv11.js 覆盖你的文件即可，但使用 #更新 后需要重新覆盖。
+直接把本仓库的 plugins\adapter\OneBotv11.js 和 lib\plugins\loader.js 覆盖你的文件即可，但使用 #更新 后需要重新覆盖。
 ```
 
 <div align="center">
@@ -70,7 +75,7 @@ Yunzai 应用端，支持多账号，支持协议端：OneBotv11、ComWeChat、G
 <details><summary>脚本安装</summary>
 
 ```bash
-
+bash <(curl -sL https://gitee.com/Misaka21011/Yunzai-Bot-Shell/raw/master/install.sh)
 ```
 
 </details>
