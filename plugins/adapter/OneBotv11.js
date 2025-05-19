@@ -67,8 +67,8 @@ Bot.adapter.push(new class OneBotv11Adapter {
           break
       }
 
-      if (i.data.file)
-        i.data.file = await this.makeFile(i.data.file)
+      // if (i.data.file)
+      //   i.data.file = await this.makeFile(i.data.file)
 
       msgs.push(i)
     }
@@ -413,7 +413,8 @@ Bot.adapter.push(new class OneBotv11Adapter {
   async setAvatar(data, file) {
     Bot.makeLog("info", `设置头像：${file}`, data.self_id)
     return data.bot.sendApi("set_qq_avatar", {
-      file: await this.makeFile(file),
+      // file: await this.makeFile(file),
+      file,
     })
   }
 
@@ -437,7 +438,8 @@ Bot.adapter.push(new class OneBotv11Adapter {
     Bot.makeLog("info", `设置群头像：${file}`, `${data.self_id} => ${data.group_id}`, true)
     return data.bot.sendApi("set_group_portrait", {
       group_id: data.group_id,
-      file: await this.makeFile(file),
+      // file: await this.makeFile(file),
+      file,
     })
   }
 
@@ -522,6 +524,7 @@ Bot.adapter.push(new class OneBotv11Adapter {
     Bot.makeLog("info", `发送好友文件：${name}(${file})`, `${data.self_id} => ${data.user_id}`, true)
     return data.bot.sendApi("upload_private_file", {
       user_id: data.user_id,
+      // file: await this.makeFile(file, { file: true }),
       file,
       name,
     })
@@ -532,8 +535,24 @@ Bot.adapter.push(new class OneBotv11Adapter {
     return data.bot.sendApi("upload_group_file", {
       group_id: data.group_id,
       folder,
+      // file: await this.makeFile(file, { file: true }),
       file,
       name,
+    })
+  }
+
+  async sendFriendPoke(data, user_id) {
+    Bot.makeLog("info", `发送好友戳一戳：`, `${data.self_id} => ${user_id}`, true)
+    return data.bot.sendApi("friend_poke", {
+      user_id,
+    })
+  }
+
+  async sendGroupPoke(data, user_id) {
+    Bot.makeLog("info", `发送群戳一戳：`, `${data.self_id} => ${user_id}`, true)
+    return data.bot.sendApi("group_poke", {
+      group_id: data.group_id,
+      user_id,
     })
   }
 
@@ -648,6 +667,7 @@ Bot.adapter.push(new class OneBotv11Adapter {
       getChatHistory: this.getFriendMsgHistory.bind(this, i),
       thumbUp: this.sendLike.bind(this, i),
       delete: this.deleteFriend.bind(this, i),
+      poke: this.sendFriendPoke.bind(this, user_id),
     }
   }
 
@@ -679,7 +699,8 @@ Bot.adapter.push(new class OneBotv11Adapter {
       ...i,
       getInfo: this.getMemberInfo.bind(this, i),
       getAvatarUrl() { return this.avatar || `https://q.qlogo.cn/g?b=qq&s=0&nk=${user_id}` },
-      poke: this.sendGroupMsg.bind(this, i, { type: "poke", qq: user_id }),
+      // poke: this.sendGroupMsg.bind(this, i, { type: "poke", qq: user_id }),
+      poke: this.sendGroupPoke.bind(this, user_id),
       mute: this.setGroupBan.bind(this, i, user_id),
       kick: this.setGroupKick.bind(i, user_id),
       get is_friend() { return data.bot.fl.has(user_id) },
@@ -736,7 +757,8 @@ Bot.adapter.push(new class OneBotv11Adapter {
       getMemberList: this.getMemberList.bind(this, i),
       getMemberMap: this.getMemberMap.bind(this, i),
       pickMember: this.pickMember.bind(this, i, group_id),
-      pokeMember: qq => this.sendGroupMsg(i, { type: "poke", qq }),
+      // pokeMember: qq => this.sendGroupMsg(i, { type: "poke", qq }),
+      pokeMember: this.sendGroupPoke.bind(this, i),
       setName: this.setGroupName.bind(this, i),
       setAvatar: this.setGroupAvatar.bind(this, i),
       setAdmin: this.setGroupAdmin.bind(this, i),
