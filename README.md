@@ -11,8 +11,6 @@
 | getGroupMsgHistory  | get_group_msg_history  | 适配 message_id 以获取历史消息       |
 | sendFriendFile      | upload_private_file    | 发送文件，适配 file 仅支持本地Path   |
 | sendGroupFile       | upload_group_file      | 发送文件，适配 file 仅支持本地Path   |
-| setAvatar           | set_qq_avatar          | 设置QQ头像，适配 file 仅支持本地Path |
-| setGroupAvatar      | set_group_portrait     | 设置群头像，适配 file 仅支持本地Path |
 | pokeMember          | group_poke             | 群聊戳一戳                           |
 
 ## 已调整参数

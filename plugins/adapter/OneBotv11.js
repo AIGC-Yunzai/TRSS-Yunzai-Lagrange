@@ -413,8 +413,7 @@ Bot.adapter.push(new class OneBotv11Adapter {
   async setAvatar(data, file) {
     Bot.makeLog("info", `设置头像：${file}`, data.self_id)
     return data.bot.sendApi("set_qq_avatar", {
-      // file: await this.makeFile(file),
-      file,
+      file: await this.makeFile(file),
     })
   }
 
@@ -438,8 +437,7 @@ Bot.adapter.push(new class OneBotv11Adapter {
     Bot.makeLog("info", `设置群头像：${file}`, `${data.self_id} => ${data.group_id}`, true)
     return data.bot.sendApi("set_group_portrait", {
       group_id: data.group_id,
-      // file: await this.makeFile(file),
-      file,
+      file: await this.makeFile(file),
     })
   }
 

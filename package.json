@@ -38,7 +38,8 @@
     "strip-ansi": "^7.1.0",
     "ulid": "^3.0.0",
     "ws": "^8.18.2",
-    "yaml": "^2.7.1"
+    "yaml": "^2.7.1",
+    "sharp": "^0.33.5"
   },
   "devDependencies": {
     "eslint": "^8.57.1",
