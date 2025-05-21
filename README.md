@@ -15,10 +15,15 @@
 
 ## 已调整参数
 
-
 | parameter | about                          |
 | --------- | ------------------------------ |
 | e.source  | icqq 引用消息参数 e.source.seq |
+
+## 已调整逻辑
+
+| parameter | about                          |
+| --------- | ------------------------------ |
+| e.reply  | (msg, quote, { recallMsg, at }) 现在 recallMsg 参数将不会撤回原消息 |
 
 
 ## 安装方法
