@@ -5,13 +5,13 @@
 
 ## 已调整适配器适配
 
-| method              | api                    | about                                |
-| ------------------- | ---------------------- | ------------------------------------ |
-| getFriendMsgHistory | get_friend_msg_history | 适配 message_id 以获取历史消息       |
-| getGroupMsgHistory  | get_group_msg_history  | 适配 message_id 以获取历史消息       |
-| sendFriendFile      | upload_private_file    | 发送文件，适配 file 仅支持本地Path   |
-| sendGroupFile       | upload_group_file      | 发送文件，适配 file 仅支持本地Path   |
-| pokeMember          | group_poke             | 群聊戳一戳                           |
+| method              | api                    | about                                  |
+| ------------------- | ---------------------- | -------------------------------------- |
+| getFriendMsgHistory | get_friend_msg_history | 适配 message_id 以获取历史消息         |
+| getGroupMsgHistory  | get_group_msg_history  | 适配 message_id 以获取历史消息         |
+| sendFriendFile      | upload_private_file    | 发送文件，适配 file 仅支持本地Path     |
+| sendGroupFile       | upload_group_file      | 发送文件，适配 file 仅支持本地Path     |
+| pokeMember          | group_poke             | ~~群聊戳一戳~~（拉格朗日20250522坏了，等待修复） |
 
 ## 已调整参数
 
@@ -21,10 +21,9 @@
 
 ## 已调整逻辑
 
-| parameter | about                          |
-| --------- | ------------------------------ |
-| e.reply  | (msg, quote, { recallMsg, at }) recallMsg: Bot定时撤回回复消息时将不会撤回命令消息 |
-| e.reply  | (msg, quote, { recallMsg, at }) quote: 拉格朗日bug，无法引用回复了，现在取消 reply 消息引用，等待修复 |
+| parameter | about                                                                              |
+| --------- | ---------------------------------------------------------------------------------- |
+| e.reply   | (msg, quote, { recallMsg, at }) recallMsg: Bot定时撤回回复消息时将不会撤回命令消息 |
 
 
 ## 安装方法
