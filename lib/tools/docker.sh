@@ -1,5 +1,5 @@
 #TRSS Yunzai Docker 安装脚本 作者：时雨🌌星空
-NAME=v1.0.0 VERSION=202504180
+NAME=v1.0.0 VERSION=202505210
 R="[1;31m" G="[1;32m" Y="[1;33m" C="[1;36m" B="[1;m" O="[m"
 echo "$B———————————————————————————
 $R TRSS$Y Yunzai$G Docker$C Script$O
@@ -55,11 +55,13 @@ $R! 下载失败，5秒后切换镜像源$O"
   case "$N" in
     1)DKURL="docker.m.daocloud.io";;
     2)DKURL="mirror.ccs.tencentyun.com";;
-    3)DKURL="dockerpull.com";;
-    4)DKURL="dockerhub.timeweb.cloud";;
-    5)DKURL="mirror.baidubce.com";;
-    6)DKURL="docker.nju.edu.cn";;
-    7)DKURL="dockerproxy.com";;
+    3)DKURL="docker.1ms.run";;
+    4)DKURL="docker.xuanyuan.me";;
+    5)DKURL="docker.mybacc.com";;
+    6)DKURL="dytt.online";;
+    7)DKURL="lispy.org";;
+    8)DKURL="docker.escateam.icu";;
+    9)DKURL="docker.escaped.icu";;
     *)DKURL="docker.io";N=0
   esac
 done
