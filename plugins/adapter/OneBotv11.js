@@ -155,12 +155,13 @@ Bot.adapter.push(new class OneBotv11Adapter {
     return msg
   }
 
-  async getFriendMsgHistory(data, message_seq, count) {
+  async getFriendMsgHistory(data, message_seq, count, reverseOrder = true) {
     const msgs = (await data.bot.sendApi("get_friend_msg_history", {
       user_id: data.user_id,
       message_seq,
       message_id: message_seq,
       count,
+      reverseOrder,
     })).data?.messages
 
     for (const i of Array.isArray(msgs) ? msgs : [msgs])
@@ -169,12 +170,13 @@ Bot.adapter.push(new class OneBotv11Adapter {
     return msgs
   }
 
-  async getGroupMsgHistory(data, message_seq, count) {
+  async getGroupMsgHistory(data, message_seq, count, reverseOrder = true) {
     const msgs = (await data.bot.sendApi("get_group_msg_history", {
       group_id: data.group_id,
       message_seq,
       message_id: message_seq,
       count,
+      reverseOrder,
     })).data?.messages
 
     for (const i of Array.isArray(msgs) ? msgs : [msgs])
@@ -700,7 +702,7 @@ Bot.adapter.push(new class OneBotv11Adapter {
       // poke: this.sendGroupMsg.bind(this, i, { type: "poke", qq: user_id }),
       poke: this.sendGroupPoke.bind(this, user_id),
       mute: this.setGroupBan.bind(this, i, user_id),
-      kick: this.setGroupKick.bind(i, user_id),
+      kick: this.setGroupKick.bind(this, i, user_id),
       get is_friend() { return data.bot.fl.has(user_id) },
       get is_owner() { return this.role === "owner" },
       get is_admin() { return this.role === "admin" || this.is_owner },

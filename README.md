@@ -1,17 +1,17 @@
 # Fork 概要
 
-- 仅针对 [Lagrange.Onebot](https://github.com/LagrangeDev/Lagrange.Core) 作适配器修改
-- 参考 [Lagrange.Core 开发文档](https://lagrange-onebot.apifox.cn/)
+- 仅针对 [Lagrange.Onebot v1](https://github.com/LagrangeDev/Lagrange.Core) 作适配器修改
+- 参考 [Lagrange.Core v1 开发文档](https://lagrange-onebot.apifox.cn/)
 
 ## 已调整适配器适配
 
-| method              | api                    | about                                  |
-| ------------------- | ---------------------- | -------------------------------------- |
-| getFriendMsgHistory | get_friend_msg_history | 适配 message_id 以获取历史消息         |
-| getGroupMsgHistory  | get_group_msg_history  | 适配 message_id 以获取历史消息         |
-| sendFriendFile      | upload_private_file    | 发送文件，适配 file 仅支持本地Path     |
-| sendGroupFile       | upload_group_file      | 发送文件，适配 file 仅支持本地Path     |
-| pokeMember          | group_poke             | ~~群聊戳一戳~~（拉格朗日20250522坏了，等待修复） |
+| method              | api                    | about                                              |
+| ------------------- | ---------------------- | -------------------------------------------------- |
+| getFriendMsgHistory | get_friend_msg_history | 适配 message_id 以获取历史消息                     |
+| getGroupMsgHistory  | get_group_msg_history  | 适配 message_id 以获取历史消息                     |
+| sendFriendFile      | upload_private_file    | 发送文件，适配 file 仅支持本地Path                 |
+| sendGroupFile       | upload_group_file      | 发送文件，适配 file 仅支持本地Path                 |
+| pokeMember          | group_poke             | ~~群聊戳一戳~~（Lagrange.Onebot v1 bug，等待修复） |
 
 ## 已调整参数
 
@@ -25,8 +25,12 @@
 | --------- | ---------------------------------------------------------------------------------- |
 | e.reply   | (msg, quote, { recallMsg, at }) recallMsg: Bot定时撤回回复消息时将不会撤回命令消息 |
 
+## Fix bug
 
-## 安装方法
+- 修复锅巴设置中当插件的配置文件超过 1mb 时保存失败（PayloadTooLargeError）
+
+
+# 安装方法
 
 ### 方法一 常规安装
 

@@ -9,8 +9,8 @@ if (["linux", "android"].includes(process.platform))
   for (const item of [
     "chromium",
     "chromium-browser",
-    "chrome",
     "google-chrome",
+    "google-chrome-stable",
   ]) try {
     const chromiumPath = execSync(`command -v ${item}`).toString().trim()
     if (chromiumPath && existsSync(chromiumPath)) {

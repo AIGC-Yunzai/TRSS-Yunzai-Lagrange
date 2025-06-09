@@ -19,7 +19,7 @@
     "chalk": "^5.4.1",
     "chokidar": "^4.0.3",
     "express": "^4.21.2",
-    "file-type": "^20.5.0",
+    "file-type": "^21.0.0",
     "https-proxy-agent": "7.0.6",
     "image-size": "^2.0.2",
     "level": "^10.0.0",
@@ -30,7 +30,7 @@
     "node-fetch": "link:lib/modules/node-fetch",
     "node-schedule": "^2.1.1",
     "oicq": "link:lib/modules/oicq",
-    "pm2": "^6.0.5",
+    "pm2": "^6.0.6",
     "puppeteer": "*",
     "redis": "^4.7.1",
     "sequelize": "^6.37.7",
@@ -38,7 +38,7 @@
     "strip-ansi": "^7.1.0",
     "ulid": "^3.0.0",
     "ws": "^8.18.2",
-    "yaml": "^2.7.1",
+    "yaml": "^2.8.0",
     "sharp": "^0.33.5"
   },
   "devDependencies": {
