@@ -15,18 +15,19 @@ Bot.adapter.push(new class OPQBotAdapter {
     const ReqId = Math.round(Math.random()*10**16)
     const request = { BotUin: String(id), CgiCmd, CgiRequest, ReqId }
     Bot[id].ws.sendMsg(request)
-    const error = Error()
-    return new Promise((resolve, reject) =>
-      this.echo[ReqId] = {
-        request, resolve, reject, error,
-        timeout: setTimeout(() => {
-          reject(Object.assign(error, request, { timeout: this.timeout }))
-          delete this.echo[ReqId]
-          Bot.makeLog("error", ["请求超时", request], id)
-          Bot[id].ws.terminate()
-        }, this.timeout),
-      }
-    )
+    this.echo[ReqId] = {
+      ...Promise.withResolvers(),
+      request, error: Error(),
+      timeout: setTimeout(() => {
+        reject(Object.assign(error, request, { timeout: this.timeout }))
+        Bot.makeLog("error", ["请求超时", request], id)
+        ws.terminate()
+      }, this.timeout),
+    }
+    return this.echo[ReqId].promise.finally(() => {
+      clearTimeout(this.echo[ReqId].timeout)
+      delete this.echo[ReqId]
+    })
   }
 
   makeLog(msg) {
@@ -348,8 +349,6 @@ Bot.adapter.push(new class OPQBotAdapter {
         ))
       else
         this.echo[data.ReqId].resolve(data)
-      clearTimeout(this.echo[data.ReqId].timeout)
-      delete this.echo[data.ReqId]
     } else {
       Bot.makeLog("warn", `未知消息：${logger.magenta(data.raw)}`, id)
     }
