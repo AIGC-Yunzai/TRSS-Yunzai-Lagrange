@@ -18,11 +18,11 @@ export class update extends plugin {
           fnc: "updateLog"
         },
         {
-          reg: "^#(安?静)?(强制)?更新",
+          reg: "^#(安?静默?)?(强制)?更新",
           fnc: "update"
         },
         {
-          reg: "^#全部(安?静)?(强制)?更新$",
+          reg: "^#全部(安?静默?)?(强制)?更新$",
           fnc: "updateAll",
           permission: "master"
         }
@@ -31,7 +31,7 @@ export class update extends plugin {
   }
 
   get quiet() {
-    return /^#(全部)?(安?静)/.test(this.e.msg)
+    return /^#(全部)?(安?静默?)/.test(this.e.msg)
   }
 
   exec(cmd, plugin, opts = {}) {
@@ -84,7 +84,7 @@ export class update extends plugin {
     uping = false
   }
 
-  async getPlugin(plugin = this.e.msg.replace(/#(安?静)?(强制)?更新(日志)?/, "")) {
+  async getPlugin(plugin = this.e.msg.replace(/#(安?静默?)?(强制)?更新(日志)?/, "")) {
     if (!plugin) return ""
     for (const i of [plugin, `${plugin}-Plugin`, `${plugin}-plugin`])
       if (await Bot.fsStat(`plugins/${i}/.git`)) {
