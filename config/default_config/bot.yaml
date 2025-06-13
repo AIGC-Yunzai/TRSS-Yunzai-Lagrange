@@ -24,6 +24,8 @@ stop_cron:
 # 定时开机cron表达式
 start_cron:
 
+# 缓存群成员列表
+cache_group_member: true
 # 上线推送通知的冷却时间
 online_msg_exp: 1440
 # 文件保存时间

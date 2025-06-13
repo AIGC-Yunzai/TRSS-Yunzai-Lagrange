@@ -1,3 +1,4 @@
+import cfg from "../../lib/config/config.js"
 import path from "node:path"
 import { ulid } from "ulid"
 
@@ -16,18 +17,19 @@ Bot.adapter.push(new class ComWeChatAdapter {
     const echo = ulid()
     const request = { action, params, echo }
     ws.sendMsg(request)
-    const error = Error()
-    return new Promise((resolve, reject) =>
-      this.echo[echo] = {
-        request, resolve, reject, error,
-        timeout: setTimeout(() => {
-          reject(Object.assign(error, request, { timeout: this.timeout }))
-          delete this.echo[echo]
-          Bot.makeLog("error", ["请求超时", request], data.self_id)
-          ws.terminate()
-        }, this.timeout),
-      }
-    )
+    this.echo[echo] = {
+      ...Promise.withResolvers(),
+      request, error: Error(),
+      timeout: setTimeout(() => {
+        this.echo[echo].reject(Object.assign(this.echo[echo].error, request, { timeout: this.timeout }))
+        Bot.makeLog("error", ["请求超时", request], data.self_id)
+        ws.terminate()
+      }, this.timeout),
+    }
+    return this.echo[echo].promise.finally(() => {
+      clearTimeout(this.echo[echo].timeout)
+      delete this.echo[echo]
+    })
   }
 
   async uploadFile(data, file) {
@@ -199,6 +201,8 @@ Bot.adapter.push(new class ComWeChatAdapter {
   }
 
   async getGroupMemberMap(data) {
+    if (!cfg.bot.cache_group_member)
+      return this.getGroupMap(data)
     for (const [group_id] of await this.getGroupMap(data)) {
       if (group_id === "filehelper")
         continue
@@ -500,8 +504,6 @@ Bot.adapter.push(new class ComWeChatAdapter {
         this.echo[data.echo].resolve(data.data ? new Proxy(data, {
           get: (target, prop) => target.data[prop] ?? target[prop],
         }) : data)
-      clearTimeout(this.echo[data.echo].timeout)
-      delete this.echo[data.echo]
     } else {
       Bot.makeLog("warn", `未知消息：${logger.magenta(data.raw)}`, data.self_id)
     }
