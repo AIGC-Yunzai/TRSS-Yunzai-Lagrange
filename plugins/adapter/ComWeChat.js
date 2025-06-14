@@ -21,7 +21,7 @@ Bot.adapter.push(new class ComWeChatAdapter {
       ...Promise.withResolvers(),
       request, error: Error(),
       timeout: setTimeout(() => {
-        reject(Object.assign(error, request, { timeout: this.timeout }))
+        this.echo[echo].reject(Object.assign(this.echo[echo].error, request, { timeout: this.timeout }))
         Bot.makeLog("error", ["请求超时", request], data.self_id)
         ws.terminate()
       }, this.timeout),

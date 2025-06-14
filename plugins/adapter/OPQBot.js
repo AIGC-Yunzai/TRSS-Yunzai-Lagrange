@@ -19,7 +19,7 @@ Bot.adapter.push(new class OPQBotAdapter {
       ...Promise.withResolvers(),
       request, error: Error(),
       timeout: setTimeout(() => {
-        reject(Object.assign(error, request, { timeout: this.timeout }))
+        this.echo[ReqId].reject(Object.assign(this.echo[ReqId].error, request, { timeout: this.timeout }))
         Bot.makeLog("error", ["请求超时", request], id)
         ws.terminate()
       }, this.timeout),
