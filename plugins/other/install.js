@@ -32,8 +32,7 @@ const list = {
   "siliconflow-plugin": GitHubMirror + "https://github.com/AIGC-Yunzai/siliconflow-plugin.git",
 }
 const map = {}
-for (const i in list)
-  map[i.replace(/-[Pp]lugin$/, "")] = i
+for (const i in list) map[i.replace(/-[Pp]lugin$/, "")] = i
 
 export class install extends plugin {
   constructor() {
@@ -46,9 +45,9 @@ export class install extends plugin {
         {
           reg: `^#安装(插件|${Object.keys(map).join("|")})(-[Pp]lugin)?$`,
           fnc: "install",
-          permission: "master"
-        }
-      ]
+          permission: "master",
+        },
+      ],
     })
   }
 
@@ -63,14 +62,10 @@ export class install extends plugin {
 
     if (name == "插件") {
       let msg = "\n"
-      for (const i in list)
-        if (!await Bot.fsStat(`plugins/${i}`))
-          msg += `${i}\n`
+      for (const i in list) if (!(await Bot.fsStat(`plugins/${i}`))) msg += `${i}\n`
 
-      if (msg == "\n")
-        msg = "暂无可安装插件"
-      else
-        msg = `可安装插件列表：${msg}发送 #安装+插件名 进行安装`
+      if (msg == "\n") msg = "暂无可安装插件"
+      else msg = `可安装插件列表：${msg}发送 #安装+插件名 进行安装`
 
       await this.reply(msg)
       return true
@@ -90,8 +85,7 @@ export class install extends plugin {
 
     insing = true
     const ret = await Bot.exec(`git clone --depth 1 --single-branch "${url}" "${path}"`)
-    if (await Bot.fsStat(`${path}/package.json`))
-      await Bot.exec("pnpm install")
+    if (await Bot.fsStat(`${path}/package.json`)) await Bot.exec("pnpm install")
     insing = false
 
     if (ret.error) {
@@ -103,13 +97,18 @@ export class install extends plugin {
   }
 
   gitErrUrl(error) {
-    return error.replace(/(Cloning into|正克隆到)\s*'.+?'/g, "").match(/'(.+?)'/g)[0].replace(/'(.+?)'/, "$1")
+    return error
+      .replace(/(Cloning into|正克隆到)\s*'.+?'/g, "")
+      .match(/'(.+?)'/g)[0]
+      .replace(/'(.+?)'/, "$1")
   }
 
   async gitErr(name, error, stdout) {
     if (/unable to access|无法访问/.test(error))
       await this.reply(`远程仓库连接错误：${this.gitErrUrl(error)}`)
-    else if (/not found|未找到|does not (exist|appear)|不存在|Authentication failed|鉴权失败/.test(error))
+    else if (
+      /not found|未找到|does not (exist|appear)|不存在|Authentication failed|鉴权失败/.test(error)
+    )
       await this.reply(`远程仓库地址错误：${this.gitErrUrl(error)}`)
     else await this.reply(`${name} 插件安装错误\n${error}\n${stdout}`)
   }

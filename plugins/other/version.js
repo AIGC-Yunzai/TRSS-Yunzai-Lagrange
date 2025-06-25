@@ -10,7 +10,7 @@ if (App) {
   let app = App.init({
     id: "version",
     name: "版本",
-    desc: "版本"
+    desc: "版本",
   })
 
   app.reg({
@@ -19,16 +19,20 @@ if (App) {
       desc: "【#帮助】 版本介绍",
       fn: async function (e) {
         let { changelogs, currentVersion } = Version.readLogFile("root")
-        return await Common.render("help/version-info", {
-          currentVersion,
-          changelogs,
-          name: "TRSS-Yunzai",
-          elem: "cryo",
-          pluginName: false,
-          pluginVersion: false,
-        }, { e, scale: 1.2 })
-      }
-    }
+        return await Common.render(
+          "help/version-info",
+          {
+            currentVersion,
+            changelogs,
+            name: "TRSS-Yunzai",
+            elem: "cryo",
+            pluginName: false,
+            pluginVersion: false,
+          },
+          { e, scale: 1.2 },
+        )
+      },
+    },
   })
 
   version = app.v3App()

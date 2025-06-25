@@ -8,21 +8,18 @@ export class recallReply extends plugin {
       rule: [
         {
           reg: `^#?撤回$`,
-          fnc: "recall"
-        }
-      ]
+          fnc: "recall",
+        },
+      ],
     })
   }
 
   async recall(e) {
     if (!e.isMaster) return false
     let recall
-    if (e.group?.recallMsg)
-      recall = e.group.recallMsg.bind(e.group)
-    else if (e.friend?.recallMsg)
-      recall = e.friend.recallMsg.bind(e.friend)
-    else if (e.bot.recallMsg)
-      recall = e.bot.recallMsg.bind(e.bot)
+    if (e.group?.recallMsg) recall = e.group.recallMsg.bind(e.group)
+    else if (e.friend?.recallMsg) recall = e.friend.recallMsg.bind(e.friend)
+    else if (e.bot.recallMsg) recall = e.bot.recallMsg.bind(e.bot)
     else return false
     if (e.message_id) recall(e.message_id)
     const reply_id = e.reply_id || (e.getReply && (await e.getReply())?.message_id)

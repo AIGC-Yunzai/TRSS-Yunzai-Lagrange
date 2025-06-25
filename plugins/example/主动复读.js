@@ -13,8 +13,8 @@ export class example2 extends plugin {
           /** 执行方法 */
           fnc: "repeat",
           permission: "master",
-        }
-      ]
+        },
+      ],
     })
   }
 

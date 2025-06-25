@@ -1,13 +1,13 @@
 export class invite extends plugin {
-  constructor () {
+  constructor() {
     super({
       name: "invite",
       dsc: "主人邀请自动进群",
-      event: "request.group.invite"
+      event: "request.group.invite",
     })
   }
 
-  async accept () {
+  async accept() {
     if (!this.e.isMaster) {
       logger.mark(`[邀请加群]：${this.e.group_name}：${this.e.group_id}`)
       return

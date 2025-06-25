@@ -15,22 +15,22 @@ export class add extends plugin {
       rule: [
         {
           reg: "^#(全局)?添加",
-          fnc: "add"
+          fnc: "add",
         },
         {
           reg: "^#(全局)?删除",
-          fnc: "del"
+          fnc: "del",
         },
         {
           reg: "",
           fnc: "getMessage",
-          log: false
+          log: false,
         },
         {
           reg: "^#(全局)?(消息|词条)",
-          fnc: "list"
-        }
-      ]
+          fnc: "list",
+        },
+      ],
     })
 
     this.path = "data/messageJson/"
@@ -50,16 +50,14 @@ export class add extends plugin {
     this.isGlobal = Boolean(this.e.msg.match(/^#全局/))
     await this.getGroupId()
 
-    if (!this.group_id)
-      return this.reply("请先在群内触发消息，确定添加的群")
+    if (!this.group_id) return this.reply("请先在群内触发消息，确定添加的群")
 
     await this.initMessageMap()
 
     if (!this.checkAuth()) return false
     /** 获取关键词 */
     this.getKeyWord()
-    if (!this.keyWord)
-      return this.reply("添加错误：没有关键词")
+    if (!this.keyWord) return this.reply("添加错误：没有关键词")
 
     this.e.keyWord = this.keyWord
     this.e.message = []
@@ -81,7 +79,7 @@ export class add extends plugin {
       return this.group_id
     }
 
-    return this.group_id = await redis.get(this.grpKey)
+    return (this.group_id = await redis.get(this.grpKey))
   }
 
   checkAuth() {
@@ -121,12 +119,9 @@ export class add extends plugin {
   trimAlias(msg) {
     const groupCfg = cfg.getGroup(this.e.self_id, this.group_id)
     let alias = groupCfg.botAlias
-    if (!Array.isArray(alias))
-      alias = [alias]
+    if (!Array.isArray(alias)) alias = [alias]
 
-    for (const name of alias)
-      if (msg.startsWith(name))
-        msg = lodash.trimStart(msg, name).trim()
+    for (const name of alias) if (msg.startsWith(name)) msg = lodash.trimStart(msg, name).trim()
 
     return msg
   }
@@ -147,29 +142,23 @@ export class add extends plugin {
           delete i.url
           delete i.fid
         }
-        if (i.type == "at" && i.qq == this.e.self_id)
-          continue
+        if (i.type == "at" && i.qq == this.e.self_id) continue
         context.message.push(i)
       }
       return
     }
 
     this.finish("addContext")
-    if (!context.message?.length)
-      return this.reply("添加错误：没有添加内容")
+    if (!context.message?.length) return this.reply("添加错误：没有添加内容")
 
-    if (!messageMap[this.group_id])
-      messageMap[this.group_id] = new Map()
+    if (!messageMap[this.group_id]) messageMap[this.group_id] = new Map()
 
     /** 支持单个关键词添加多个 */
     let message = messageMap[this.group_id].get(this.keyWord)
-    if (Array.isArray(message))
-      message.push(context.message)
-    else
-      message = [context.message]
+    if (Array.isArray(message)) message.push(context.message)
+    else message = [context.message]
     messageMap[this.group_id].set(this.keyWord, message)
-    if (message.length > 1)
-      this.keyWord += `(${message.length})`
+    if (message.length > 1) this.keyWord += `(${message.length})`
 
     await this.saveJson()
     return this.reply(`添加成功：${this.keyWord}`)
@@ -177,8 +166,7 @@ export class add extends plugin {
 
   async saveJson() {
     const obj = {}
-    for (const [k, v] of messageMap[this.group_id])
-      obj[k] = v
+    for (const [k, v] of messageMap[this.group_id]) obj[k] = v
 
     await fs.writeFile(`${this.path}${this.group_id}.json`, JSON.stringify(obj, "", "\t"))
   }
@@ -197,8 +185,8 @@ export class add extends plugin {
 
   getKeyWordMsg(keyWord) {
     return [
-      ...messageMap[this.group_id].get(keyWord) || [],
-      ...messageMap.global.get(keyWord) || [],
+      ...(messageMap[this.group_id].get(keyWord) || []),
+      ...(messageMap.global.get(keyWord) || []),
     ]
   }
 
@@ -217,26 +205,27 @@ export class add extends plugin {
     let msg = this.getKeyWordMsg(this.keyWord)
     if (!msg.length) {
       const index = this.keyWord.match(/\d+$/)?.[0]
-      if (index) for (let i=0; i<index.length; i++) {
-        const keyWord = this.keyWord.slice(0, this.keyWord.length - index.length+i)
-        msg = this.getKeyWordMsg(keyWord)
-        if (msg.length) {
-          const n = index.slice(-i)
-          msg = msg[n-1]
-          if (msg) {
-            this.keyWord = `${keyWord}(${n})`
-            break
+      if (index)
+        for (let i = 0; i < index.length; i++) {
+          const keyWord = this.keyWord.slice(0, this.keyWord.length - index.length + i)
+          msg = this.getKeyWordMsg(keyWord)
+          if (msg.length) {
+            const n = index.slice(-i)
+            msg = msg[n - 1]
+            if (msg) {
+              this.keyWord = `${keyWord}(${n})`
+              break
+            }
           }
         }
-      }
     } else {
-      msg = msg[lodash.random(0, msg.length-1)]
+      msg = msg[lodash.random(0, msg.length - 1)]
     }
     if (lodash.isEmpty(msg)) return false
 
     msg = [...msg]
     for (const i in msg)
-      if (msg[i].file && await Bot.fsStat(`${this.path}${msg[i].file}`))
+      if (msg[i].file && (await Bot.fsStat(`${this.path}${msg[i].file}`)))
         msg[i] = { ...msg[i], file: `${this.path}${msg[i].file}` }
 
     logger.mark(`[发送消息]${this.e.logText}[${this.keyWord}]`)
@@ -253,12 +242,11 @@ export class add extends plugin {
     messageMap[this.group_id] = new Map()
 
     const path = `${this.path}${this.group_id}.json`
-    if (!await Bot.fsStat(path)) return
+    if (!(await Bot.fsStat(path))) return
 
     try {
       const message = JSON.parse(await fs.readFile(path, "utf8"))
-      for (const i in message)
-        messageMap[this.group_id].set(i, message[i])
+      for (const i in message) messageMap[this.group_id].set(i, message[i])
     } catch (err) {
       logger.error(`JSON 格式错误：${path} ${err}`)
     }
@@ -270,21 +258,18 @@ export class add extends plugin {
     messageMap.global = new Map()
 
     const globalPath = `${this.path}global.json`
-    if (!await Bot.fsStat(globalPath)) return
+    if (!(await Bot.fsStat(globalPath))) return
 
     try {
       const message = JSON.parse(await fs.readFile(globalPath, "utf8"))
-      for (const i in message)
-        messageMap.global.set(i, message[i])
+      for (const i in message) messageMap.global.set(i, message[i])
     } catch (err) {
       logger.error(`JSON 格式错误：${globalPath} ${err}`)
     }
   }
 
   delFile(msg) {
-    return Promise.allSettled(msg.map(i =>
-      i.file && fs.rm(`${this.path}${i.file}`)
-    ))
+    return Promise.allSettled(msg.map(i => i.file && fs.rm(`${this.path}${i.file}`)))
   }
 
   async del() {
@@ -295,33 +280,32 @@ export class add extends plugin {
     await this.initMessageMap()
 
     this.getKeyWord()
-    if (!this.keyWord)
-      return this.reply("删除错误：没有关键词")
+    if (!this.keyWord) return this.reply("删除错误：没有关键词")
 
     if (messageMap[this.group_id].has(this.keyWord)) {
       await Promise.allSettled(
-        messageMap[this.group_id].get(this.keyWord).map(this.delFile.bind(this))
+        messageMap[this.group_id].get(this.keyWord).map(this.delFile.bind(this)),
       )
       messageMap[this.group_id].delete(this.keyWord)
       await this.saveJson()
       return this.reply(`删除成功：${this.keyWord}`)
     } else {
       const index = this.keyWord.match(/\d+$/)?.[0]
-      if (index) for (let i=0; i<index.length; i++) {
-        const keyWord = this.keyWord.slice(0, this.keyWord.length - index.length+i)
-        const msg = messageMap[this.group_id].get(keyWord)
-        if (msg) {
-          const n = index.slice(-i)-1
-          if (msg[n]) {
-            await this.delFile(msg[n])
-            msg.splice(n, 1)
-            if (!msg.length)
-              messageMap[this.group_id].delete(keyWord)
-            await this.saveJson()
-            return this.reply(`删除成功：${keyWord}(${n+1})`)
+      if (index)
+        for (let i = 0; i < index.length; i++) {
+          const keyWord = this.keyWord.slice(0, this.keyWord.length - index.length + i)
+          const msg = messageMap[this.group_id].get(keyWord)
+          if (msg) {
+            const n = index.slice(-i) - 1
+            if (msg[n]) {
+              await this.delFile(msg[n])
+              msg.splice(n, 1)
+              if (!msg.length) messageMap[this.group_id].delete(keyWord)
+              await this.saveJson()
+              return this.reply(`删除成功：${keyWord}(${n + 1})`)
+            }
           }
         }
-      }
     }
     return this.reply("删除错误：没有添加此关键词")
   }
@@ -339,30 +323,25 @@ export class add extends plugin {
     await this.initMessageMap()
 
     const search = this.e.msg.replace(/^#(全局)?(消息|词条)/, "").trim()
-    if (search.match(/^列表/))
-      page = search.replace(/^列表/, "") || 1
-    else
-      type = "search"
+    if (search.match(/^列表/)) page = search.replace(/^列表/, "") || 1
+    else type = "search"
 
     let list = messageMap[this.group_id]
 
-    if (lodash.isEmpty(list))
-      return this.reply("暂无消息")
+    if (lodash.isEmpty(list)) return this.reply("暂无消息")
 
     let arr = []
     if (type == "list")
       for (let [k, v] of messageMap[this.group_id])
-        arr.push({ key: k, val: v, num: arr.length+1 })
+        arr.push({ key: k, val: v, num: arr.length + 1 })
     else
       for (let [k, v] of messageMap[this.group_id])
-        if (k.includes(search))
-          arr.push({ key: k, val: v, num: arr.length+1 })
+        if (k.includes(search)) arr.push({ key: k, val: v, num: arr.length + 1 })
 
     let count = arr.length
     arr = arr.reverse()
 
-    if (type == "list")
-      arr = this.pagination(page, pageSize, arr)
+    if (type == "list") arr = this.pagination(page, pageSize, arr)
     if (lodash.isEmpty(arr)) return false
 
     let msg = []
@@ -378,20 +357,21 @@ export class add extends plugin {
     }
 
     let title = `消息列表：第${page}页，共${count}条`
-    if (type == "search")
-      title = `消息${search}：共${count}条`
+    if (type == "search") title = `消息${search}：共${count}条`
 
     msg = [title, msg.join("\n")]
 
     if (type == "list" && count > 100)
-      msg.push(`更多内容请翻页查看\n如：#消息列表${Number(page)+1}`)
+      msg.push(`更多内容请翻页查看\n如：#消息列表${Number(page) + 1}`)
 
     return this.reply(await Bot.makeForwardArray(msg))
   }
 
   /** 分页 */
   pagination(pageNo, pageSize, array) {
-    let offset = (pageNo-1) * pageSize
-    return offset+pageSize >= array.length ? array.slice(offset, array.length) : array.slice(offset, offset+pageSize)
+    let offset = (pageNo - 1) * pageSize
+    return offset + pageSize >= array.length
+      ? array.slice(offset, array.length)
+      : array.slice(offset, offset + pageSize)
   }
 }

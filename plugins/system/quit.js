@@ -4,18 +4,19 @@ export class quit extends plugin {
     super({
       name: "notice",
       dsc: "自动退群",
-      event: "notice.group.increase"
+      event: "notice.group.increase",
     })
   }
 
   async accept() {
-    if (this.e.user_id != this.e.self_id || !this.e.group?.quit || !this.e.group.getMemberMap) return false
+    if (this.e.user_id != this.e.self_id || !this.e.group?.quit || !this.e.group.getMemberMap)
+      return false
 
     const other = cfg.other
     if (!other.autoQuit) return false
 
     const gml = await this.e.group.getMemberMap()
-    if (!gml instanceof Map) return false
+    if ((!gml) instanceof Map) return false
 
     /** 判断主人邀请不退群 */
     for (const qq of cfg.masterQQ)

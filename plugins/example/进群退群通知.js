@@ -25,7 +25,7 @@ export class newcomer extends plugin {
     await this.reply([
       segment.at(this.e.user_id),
       // segment.image(),
-      msg
+      msg,
     ])
   }
 }
@@ -35,7 +35,7 @@ export class outNotice extends plugin {
     super({
       name: "退群通知",
       dsc: "xx退群了",
-      event: "notice.group.decrease"
+      event: "notice.group.decrease",
     })
 
     /** 退群提示词 */
