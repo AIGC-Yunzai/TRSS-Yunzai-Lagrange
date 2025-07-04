@@ -12,7 +12,8 @@
     "start": "pm2 start config/pm2.yaml",
     "stop": "pm2 stop config/pm2.yaml",
     "restart": "pm2 restart config/pm2.yaml",
-    "log": "pm2 log --lines 100"
+    "log": "pm2 log --lines 100",
+    "lint": "git ls-files '*.js'|xargs prettier --write --list-different"
   },
   "dependencies": {
     "art-template": "4.13.2",
@@ -30,23 +31,16 @@
     "node-fetch": "link:lib/modules/node-fetch",
     "node-schedule": "^2.1.1",
     "oicq": "link:lib/modules/oicq",
-    "pm2": "^6.0.6",
+    "pm2": "^6.0.8",
     "puppeteer": "*",
     "redis": "^4.7.1",
     "sequelize": "^6.37.7",
     "sqlite3": "5.1.6",
     "strip-ansi": "^7.1.0",
-    "ulid": "^3.0.0",
+    "ulid": "^3.0.1",
     "ws": "^8.18.2",
     "yaml": "^2.8.0",
     "sharp": "^0.33.5"
-  },
-  "devDependencies": {
-    "eslint": "^8.57.1",
-    "eslint-config-standard": "^17.1.0",
-    "eslint-plugin-import": "^2.31.0",
-    "eslint-plugin-n": "^16.6.2",
-    "eslint-plugin-promise": "^6.6.0"
   },
   "imports": {
     "#miao": "./plugins/miao-plugin/components/index.js",
@@ -63,5 +57,8 @@
     "patchedDependencies": {
       "log4js@6.9.1": "lib/modules/log4js.patch"
     }
+  },
+  "devDependencies": {
+    "prettier": "^3.6.2"
   }
 }

@@ -1,11 +1,11 @@
 import cfg from "../../lib/config/config.js"
 
 export class friend extends plugin {
-  constructor () {
+  constructor() {
     super({
       name: "autoFriend",
       dsc: "自动同意好友",
-      event: "request.friend"
+      event: "request.friend",
     })
   }
 

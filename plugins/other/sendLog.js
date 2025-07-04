@@ -13,9 +13,9 @@ export class sendLog extends plugin {
         {
           reg: "^#(运行|错误)*日志[0-9]*(.*)",
           fnc: "sendLog",
-          permission: "master"
-        }
-      ]
+          permission: "master",
+        },
+      ],
     })
 
     this.lineNum = 100
@@ -44,10 +44,11 @@ export class sendLog extends plugin {
 
     const log = await this.getLog(logFile)
 
-    if (lodash.isEmpty(log))
-      return this.reply(`暂无相关日志：${type}`)
+    if (lodash.isEmpty(log)) return this.reply(`暂无相关日志：${type}`)
 
-    return this.reply(await Bot.makeForwardArray([`最近${log.length}条${type}日志`, log.join("\n")]))
+    return this.reply(
+      await Bot.makeForwardArray([`最近${log.length}条${type}日志`, log.join("\n")]),
+    )
   }
 
   async getLog(logFile) {
@@ -55,9 +56,7 @@ export class sendLog extends plugin {
     log = log.split("\n")
 
     if (this.keyWord) {
-      for (const i in log)
-        if (!log[i].includes(this.keyWord))
-          delete log[i]
+      for (const i in log) if (!log[i].includes(this.keyWord)) delete log[i]
     } else {
       log = lodash.slice(log, (Number(this.lineNum) + 1) * -1)
     }

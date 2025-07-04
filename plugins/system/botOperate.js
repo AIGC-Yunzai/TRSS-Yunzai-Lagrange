@@ -15,14 +15,17 @@ export class botOperate extends plugin {
           reg: "^#(Bot|机器人)(上|下)线.+$",
           fnc: "Operate",
           permission: "master",
-        }
-      ]
+        },
+      ],
     })
   }
 
   Verify() {
     const data = {
-      msg: this.e.msg.replace(/^#(Bot|机器人)验证/, "").trim().split(":"),
+      msg: this.e.msg
+        .replace(/^#(Bot|机器人)验证/, "")
+        .trim()
+        .split(":"),
       reply: msg => this.reply(msg, true),
     }
     data.self_id = data.msg.shift()
