@@ -1186,6 +1186,7 @@ Bot.adapter.push(
         case "notify":
           if (data.group_id) data.notice_type = "group"
           else data.notice_type = "friend"
+          data.user_id ??= data.operator_id || data.target_id
           switch (data.sub_type) {
             case "poke":
               data.operator_id = data.user_id
@@ -1221,12 +1222,29 @@ Bot.adapter.push(
               )
               data.bot.pickMember(data.group_id, data.user_id).getInfo()
               break
+            case "group_name":
+              Bot.makeLog(
+                "info",
+                `群名更改：${data.name_new}`,
+                `${data.self_id} <= ${data.group_id}, ${data.user_id}`,
+                true,
+              )
+              data.bot.pickGroup(data.group_id).getInfo()
+              break
             case "input_status":
               data.post_type = "internal"
               data.notice_type = "input"
               data.end ??= data.event_type !== 1
               data.message ||= data.status_text || `对方${data.end ? "结束" : "正在"}输入...`
               Bot.makeLog("info", data.message, `${data.self_id} <= ${data.user_id}`, true)
+              break
+            case "profile_like":
+              Bot.makeLog(
+                "info",
+                `资料卡点赞：${data.times}次`,
+                `${data.self_id} <= ${data.operator_id}`,
+                true,
+              )
               break
             default:
               Bot.makeLog("warn", `未知通知：${logger.magenta(data.raw)}`, data.self_id)
