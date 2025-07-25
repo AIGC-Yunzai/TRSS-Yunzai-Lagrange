@@ -2,6 +2,7 @@ import Renderer from "../../../lib/renderer/Renderer.js"
 import os from "node:os"
 import lodash from "lodash"
 import puppeteer from "puppeteer"
+import { ulid } from "ulid"
 import timers from "node:timers/promises"
 import fs from "node:fs/promises"
 // 暂时保留对原config的兼容
@@ -26,14 +27,9 @@ export default class Puppeteer extends Renderer {
     /** 截图次数 */
     this.renderNum = 0
     this.config = {
-      userDataDir: config.userDataDir || "data/puppeteer",
-      headless: config.headless || "new",
-      args: config.args || [
-        "--disable-gpu",
-        "--disable-setuid-sandbox",
-        "--no-sandbox",
-        "--no-zygote",
-      ],
+      headless: "new",
+      args: ["--disable-gpu", "--disable-setuid-sandbox", "--no-sandbox", "--no-zygote"],
+      ...config,
     }
     if (config.chromiumPath || cfg?.bot?.chromium_path)
       /** chromium其他路径 */
@@ -84,22 +80,22 @@ export default class Puppeteer extends Renderer {
     } catch {}
 
     if (!this.browser || !connectFlag) {
+      let config = this.config
+      if (!config.userDataDir) {
+        await fs.rm("temp/puppeteer", { force: true, recursive: true }).catch(() => {})
+        config = { ...config, userDataDir: `temp/puppeteer/${ulid()}` }
+      }
       // 如果没有实例，初始化puppeteer
-      this.browser = await puppeteer.launch(this.config).catch(async (err, trace) => {
+      this.browser = await puppeteer.launch(config).catch(async (err, trace) => {
         const errMsg = err.toString() + (trace ? trace.toString() : "")
         logger.error(err, trace)
-        if (errMsg.includes("Could not find Chromium")) {
+        if (errMsg.includes("Could not find Chromium"))
           logger.error(
             "没有正确安装 Chromium，可以尝试执行安装命令：node node_modules/puppeteer/install.js",
           )
-        } else if (errMsg.includes("cannot open shared object file")) {
+        else if (errMsg.includes("cannot open shared object file"))
           logger.error("没有正确安装 Chromium 运行库")
-        } else if (errMsg.includes(this.config.userDataDir)) {
-          await fs.rm(this.config.userDataDir, { force: true, recursive: true }).catch(() => {})
-          return (this.lock = false)
-        }
       })
-      if (this.lock === false) return this.browserInit()
     }
 
     this.lock = false
