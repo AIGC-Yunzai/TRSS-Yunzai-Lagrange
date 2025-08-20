@@ -186,6 +186,8 @@ bash <(curl -L https://gitee.com/TimeRainStarSky/Yunzai/raw/main/lib/tools/docke
 
 2. 启动协议端
 
+- [Philia - 新协议开发中](../../../../TRSSo/Yunzai-Philia-Plugin)
+
 <details><summary>WebSocket</summary><blockquote>
 
 <details><summary>OneBotv11</summary><blockquote>

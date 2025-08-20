@@ -10,6 +10,7 @@ const list = {
   // "ws-plugin":"https://gitee.com/xiaoye12123/ws-plugin",
   "TRSS-Plugin": "https://Yunzai.TRSS.me",
   "miao-plugin": "https://gitcode.com/TimeRainStarSky/miao-plugin.git",
+  "Philia-Plugin": "https://gitee.com/TRSSo/Yunzai-Philia-Plugin",
   "Guoba-Plugin": "https://gitee.com/guoba-yunzai/guoba-plugin",
   "yenai-plugin": GitHubMirror + "https://github.com/misaka20002/yenai-plugin.git",
   // "flower-plugin" :"https://gitee.com/Nwflower/flower-plugin",

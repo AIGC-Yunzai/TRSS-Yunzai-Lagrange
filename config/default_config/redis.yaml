@@ -1,5 +1,5 @@
 # Redis 命令路径
-path: valkey-server
+path: redis-server
 # Redis 地址
 host: 127.0.0.1
 # Redis 端口

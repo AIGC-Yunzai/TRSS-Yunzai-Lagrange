@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "art-template": "4.13.2",
-    "chalk": "^5.4.1",
+    "chalk": "^5.5.0",
     "chokidar": "^4.0.3",
     "express": "^4.21.2",
     "file-type": "^21.0.0",
@@ -39,7 +39,7 @@
     "strip-ansi": "^7.1.0",
     "ulid": "^3.0.1",
     "ws": "^8.18.3",
-    "yaml": "^2.8.0",
+    "yaml": "^2.8.1",
     "sharp": "^0.33.5"
   },
   "imports": {
