@@ -131,8 +131,10 @@ export class install extends plugin {
     const e_new = await this.awaitContext()
     if (e_new.msg == "#确认")
       return this.runUninstall(name, path)
-    else
+    else {
+      this.reply(`卸载${name}插件 操作已取消`, true)
       return true
+    }
   }
 
   async runInstall(name, url, path) {
