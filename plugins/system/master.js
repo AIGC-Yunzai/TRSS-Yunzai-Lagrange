@@ -48,7 +48,7 @@ export class master extends plugin {
       `${logger.cyan(`[${this.e.user_id}]`)} 设置主人验证码 ${logger.green(code[`${this.e.self_id}:${this.e.user_id}`])}`,
     )
     this.setContext("verify")
-    return this.reply(`[${this.e.user_id}] 请输入验证码`, true)
+    return this.reply(`[${this.e.user_id}] 请输入验证码\n其他主人查看验证码: #设置主人验证码`, true)
   }
 
   async verify() {
