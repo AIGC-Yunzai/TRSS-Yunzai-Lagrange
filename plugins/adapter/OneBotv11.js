@@ -32,8 +32,8 @@ Bot.adapter.push(
             throw Bot.makeError(data.msg || data.wording, request, { error: data })
           return data.data
             ? new Proxy(data, {
-                get: (target, prop) => target.data[prop] ?? target[prop],
-              })
+              get: (target, prop) => target.data[prop] ?? target[prop],
+            })
             : data
         })
         .finally(() => {
@@ -189,7 +189,7 @@ Bot.adapter.push(
           user_id: data.user_id,
           message_seq,
           message_id: message_seq,
-      count,
+          count,
           reverseOrder,
         })
       ).data?.messages
@@ -205,7 +205,7 @@ Bot.adapter.push(
           group_id: data.group_id,
           message_seq,
           message_id: message_seq,
-      count,
+          count,
           reverseOrder,
         })
       ).data?.messages
@@ -612,7 +612,7 @@ Bot.adapter.push(
         user_id: data.user_id,
         // file: (await this.makeFile(file, { file: true })).replace("file://", ""), // 匹配拉格朗日，直接使用文件路径
         file,
-      name,
+        name,
       })
     }
 
@@ -628,24 +628,24 @@ Bot.adapter.push(
         folder,
         // file: (await this.makeFile(file, { file: true })).replace("file://", ""), // 匹配拉格朗日，直接使用文件路径
         file,
-      name,
+        name,
       })
     }
 
-  async sendFriendPoke(data, user_id) {
-    Bot.makeLog("info", `发送好友戳一戳：`, `${data.self_id} => ${user_id}`, true)
-    return data.bot.sendApi("friend_poke", {
-      user_id,
-    })
-  }
+    async sendFriendPoke(data, user_id) {
+      Bot.makeLog("info", `发送好友戳一戳：`, `${data.self_id} => ${user_id}`, true)
+      return data.bot.sendApi("friend_poke", {
+        user_id,
+      })
+    }
 
-  async sendGroupPoke(data, user_id) {
-    Bot.makeLog("info", `发送群戳一戳：`, `${data.self_id} => ${user_id}`, true)
-    return data.bot.sendApi("group_poke", {
-      group_id: data.group_id,
-      user_id,
-    })
-  }
+    async sendGroupPoke(data, user_id) {
+      Bot.makeLog("info", `发送群戳一戳：`, `${data.self_id} => ${user_id}`, true)
+      return data.bot.sendApi("group_poke", {
+        group_id: data.group_id,
+        user_id,
+      })
+    }
 
     deleteGroupFile(data, file_id, busid) {
       Bot.makeLog(
@@ -767,7 +767,7 @@ Bot.adapter.push(
         thumbUp: this.sendLike.bind(this, i),
         delete: this.deleteFriend.bind(this, i),
         poke: this.sendFriendPoke.bind(this, user_id),
-    }
+      }
     }
 
     pickMember(data, group_id, user_id) {
@@ -977,7 +977,7 @@ Bot.adapter.push(
           model: data.bot.model,
           model_show: data.bot.model,
         })
-        .catch(() => {})
+        .catch(() => { })
 
       data.bot.info = (await data.bot.sendApi("get_login_info").catch(i => i.error)).data
       data.bot.guild_info = (
