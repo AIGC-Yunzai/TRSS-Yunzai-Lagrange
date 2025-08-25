@@ -802,8 +802,8 @@ Bot.adapter.push(
         getAvatarUrl() {
           return this.avatar || `https://q.qlogo.cn/g?b=qq&s=0&nk=${user_id}`
         },
-        poke: this.sendGroupMsg.bind(this, i, { type: "poke", qq: user_id }), // onebot11 规范的戳一戳
-        // poke: this.sendGroupPoke.bind(this, user_id), // 匹配拉格朗日非 onebot11 规范的戳一戳（但当前版本的拉格朗日的戳一戳无法使用）
+        // poke: this.sendGroupMsg.bind(this, i, { type: "poke", qq: user_id }), // onebot11 规范的戳一戳
+        poke: this.sendGroupPoke.bind(this, user_id), // 匹配拉格朗日非 onebot11 规范的戳一戳（但当前版本的拉格朗日的戳一戳无法使用）
         mute: this.setGroupBan.bind(this, i, user_id),
         kick: this.setGroupKick.bind(this, i, user_id),
         get is_friend() {
@@ -868,8 +868,8 @@ Bot.adapter.push(
         getMemberList: this.getMemberList.bind(this, i),
         getMemberMap: this.getMemberMap.bind(this, i),
         pickMember: this.pickMember.bind(this, i, group_id),
-        pokeMember: qq => this.sendGroupMsg(i, { type: "poke", qq }), // onebot11 规范的戳一戳
-        // pokeMember: this.sendGroupPoke.bind(this, i), // 匹配拉格朗日非 onebot11 规范的戳一戳（但当前版本的拉格朗日的戳一戳无法使用）
+        // pokeMember: qq => this.sendGroupMsg(i, { type: "poke", qq }), // onebot11 规范的戳一戳
+        pokeMember: this.sendGroupPoke.bind(this, i), // 匹配拉格朗日非 onebot11 规范的戳一戳（但当前版本的拉格朗日的戳一戳无法使用）
         setName: this.setGroupName.bind(this, i),
         setAvatar: this.setGroupAvatar.bind(this, i),
         setAdmin: this.setGroupAdmin.bind(this, i),
