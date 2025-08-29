@@ -152,7 +152,7 @@ Bot.adapter.push(
         Bot.makeLog("trace", err, this.id)
       }
 
-      Bot.makeLog("mark", `${this.name}(${this.id}) 已连接`, this.id)
+      Bot.makeLog("mark", `${this.name}(${this.id}) 已连接（输出需要日志等级为info）`, this.id)
       Bot.em(`connect.${this.id}`, { self_id: this.id })
     }
   })(),
