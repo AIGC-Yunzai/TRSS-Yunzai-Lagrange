@@ -77,6 +77,8 @@ Bot.adapter.push(
             break
         }
 
+        if (i.data.file && i.type == "image") i.data.file = await this.makeFile(i.data.file) // 特殊匹配拉格朗日，图片使用 base64
+
         // if (i.data.file) i.data.file = await this.makeFile(i.data.file) // 匹配拉格朗日，直接使用文件路径
 
         msgs.push(i)
