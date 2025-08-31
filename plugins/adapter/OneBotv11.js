@@ -42,7 +42,12 @@ Bot.adapter.push(
         })
     }
 
+    /** 文件转 base64 */
     async makeFile(file, opts) {
+      // 如果文件已经是 base64 格式，直接返回
+      if (typeof file === 'string' && file.startsWith('base64://')) {
+        return file
+      }
       file = await Bot.Buffer(file, {
         http: true,
         size: 10485760,
@@ -77,8 +82,7 @@ Bot.adapter.push(
             break
         }
 
-        if (i.data.file && i.type == "image") i.data.file = await this.makeFile(i.data.file) // 特殊匹配拉格朗日，图片使用 base64
-
+        if (i.data.file && i.type != "file") i.data.file = await this.makeFile(i.data.file) // 特殊匹配拉格朗日，segment.flie 直接使用文件路径
         // if (i.data.file) i.data.file = await this.makeFile(i.data.file) // 匹配拉格朗日，直接使用文件路径
 
         msgs.push(i)
