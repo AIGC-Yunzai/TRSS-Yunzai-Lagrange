@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "art-template": "4.13.2",
-    "chalk": "^5.5.0",
+    "chalk": "^5.6.0",
     "chokidar": "^4.0.3",
     "express": "^4.21.2",
     "file-type": "^21.0.0",
@@ -42,6 +42,9 @@
     "yaml": "^2.8.1",
     "sharp": "^0.33.5"
   },
+  "devDependencies": {
+    "prettier": "^3.6.2"
+  },
   "imports": {
     "#miao": "./plugins/miao-plugin/components/index.js",
     "#miao.models": "./plugins/miao-plugin/models/index.js"
@@ -55,10 +58,8 @@
       "sharp"
     ],
     "patchedDependencies": {
-      "log4js@6.9.1": "lib/modules/log4js.patch"
+      "log4js": "lib/modules/log4js.patch",
+      "streamroller": "lib/modules/streamroller.patch"
     }
-  },
-  "devDependencies": {
-    "prettier": "^3.6.2"
   }
 }

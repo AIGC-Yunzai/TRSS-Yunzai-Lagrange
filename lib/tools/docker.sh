@@ -1,5 +1,5 @@
 #TRSS Yunzai Docker 安装脚本 作者：时雨🌌星空
-NAME=v1.0.0 VERSION=202505210
+NAME=v1.0.0 VERSION=202508290
 R="[1;31m" G="[1;32m" Y="[1;33m" C="[1;36m" B="[1;m" O="[m"
 echo "$B———————————————————————————
 $R TRSS$Y Yunzai$G Docker$C Script$O
@@ -80,10 +80,11 @@ RUN sed -i "s|deb.debian.org|'"$APTURL"'|g" /etc/apt/sources.list.d/debian.sourc
  && apt install -y curl git valkey-server '"$APTDEP"'\
  && apt autoremove --purge\
  && apt clean\
+ && ln -vsf valkey-server /bin/redis-server\
  && git config --global --add safe.directory "*"\
  && npm install -g pnpm --registry "'"$NPMURL"'"\
  && rm -rf /var/cache/* /var/log/* /var/lib/apt /root/.npm\
- && echo -n "[ -s .git ]||git clone --depth 1 --single-branch \"'"$GITURL"'\" .&&pnpm install --force&&echo -n \"exec node . start\">/start&&exec node . start">/start
+ && echo -n "[ -s .git ]||git clone --depth 1 --single-branch \"'"$GITURL"'\" .&&pnpm install --force&&echo -n \"exec node . start\">/start&&exec sh /start">/start
 HEALTHCHECK CMD curl -s http://localhost:2536/status||exit 1
 WORKDIR /root/Yunzai
 ENTRYPOINT []
