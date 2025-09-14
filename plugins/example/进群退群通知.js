@@ -39,7 +39,7 @@ export class outNotice extends plugin {
     })
 
     /** 退群提示词 */
-    this.tips = "退群了"
+    this.tips = "离开了"
   }
 
   async accept() {
