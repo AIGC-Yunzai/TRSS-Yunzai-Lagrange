@@ -82,8 +82,8 @@ Bot.adapter.push(
             break
         }
 
-        if (i.data.file && i.type != "file") i.data.file = await this.makeFile(i.data.file) // 特殊匹配拉格朗日，segment.flie 直接使用文件路径
-        // if (i.data.file) i.data.file = await this.makeFile(i.data.file) // 匹配拉格朗日，直接使用文件路径
+        if (i.data.file) i.data.file = await this.makeFile(i.data.file) // 原版
+        // if (i.data.file && i.type != "file") i.data.file = await this.makeFile(i.data.file) // 2025年9月27日 已修复 拉格朗日，file 可以使用 base64 了 // 特殊匹配拉格朗日，segment.flie 直接使用文件路径
 
         msgs.push(i)
       }
@@ -194,7 +194,7 @@ Bot.adapter.push(
         await data.bot.sendApi("get_friend_msg_history", {
           user_id: data.user_id,
           message_seq,
-          message_id: message_seq,
+          message_id: message_seq, // 适配 拉格朗日 的非 onebot11 规范
           count,
           reverseOrder,
         })
@@ -210,7 +210,7 @@ Bot.adapter.push(
         await data.bot.sendApi("get_group_msg_history", {
           group_id: data.group_id,
           message_seq,
-          message_id: message_seq,
+          message_id: message_seq, // 适配 拉格朗日 的非 onebot11 规范
           count,
           reverseOrder,
         })
@@ -616,7 +616,7 @@ Bot.adapter.push(
       )
       return data.bot.sendApi("upload_private_file", {
         user_id: data.user_id,
-        // file: (await this.makeFile(file, { file: true })).replace("file://", ""), // 匹配拉格朗日，直接使用文件路径
+        file: (await this.makeFile(file, { file: true })).replace("file://", ""), // 2025年9月27日 已修复 拉格朗日，file 可以使用 base64 了 // 匹配拉格朗日，直接使用文件路径
         file,
         name,
       })
@@ -632,7 +632,7 @@ Bot.adapter.push(
       return data.bot.sendApi("upload_group_file", {
         group_id: data.group_id,
         folder,
-        // file: (await this.makeFile(file, { file: true })).replace("file://", ""), // 匹配拉格朗日，直接使用文件路径
+        file: (await this.makeFile(file, { file: true })).replace("file://", ""), // 2025年9月27日 已修复 拉格朗日，file 可以使用 base64 了 // 匹配拉格朗日，直接使用文件路径
         file,
         name,
       })
