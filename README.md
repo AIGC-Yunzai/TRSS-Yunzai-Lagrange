@@ -297,6 +297,11 @@ ws://localhost:2536/GSUIDCore
 
 3. 设置主人：发送 `#设置主人`，日志获取验证码并发送
 
+## 开发文档
+
+- [类型库](https://github.com/KaguyaJs/TRSS-Yunzai-Types)
+- [oicq](https://oicqjs.github.io/oicq)
+
 ## 班级群(¿
 
 1. [用户(897643592)](https://qm.qq.com/q/7NxbviGbj)

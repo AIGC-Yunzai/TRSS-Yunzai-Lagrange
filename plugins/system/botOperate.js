@@ -33,20 +33,20 @@ export class botOperate extends plugin {
     Bot.em(`verify.${data.self_id}`, data)
   }
 
-  Operate() {
+  async Operate() {
     const bot = Bot[this.e.msg.replace(/^#(Bot|机器人)(上|下)线/, "").trim()]
     if (typeof bot != "object") {
-      this.reply("Bot 不存在", true)
+      await this.reply("Bot 不存在", true)
       return false
     }
     if (this.e.msg.includes("上线") && typeof bot.login == "function") {
-      this.reply("已发送上线操作", true)
-      bot.login()
+      await this.reply("已发送上线操作", true)
+      await bot.login()
     } else if (this.e.msg.includes("下线") && typeof bot.logout == "function") {
-      this.reply("已发送下线操作", true)
-      bot.logout()
+      await this.reply("已发送下线操作", true)
+      await bot.logout()
     } else {
-      this.reply("暂不支持此操作", true)
+      await this.reply("暂不支持此操作", true)
     }
   }
 }
