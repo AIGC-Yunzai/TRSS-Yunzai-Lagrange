@@ -179,6 +179,13 @@ bash <(curl -L https://gitee.com/TimeRainStarSky/Yunzai/raw/main/lib/tools/docke
 
 </details>
 
+<details><summary>Windows 安装程序</summary>
+
+- [🐱 GitHub](https://GitHub.com/TimeRainStarSky/Yunzai-Windows-Installer/releases)
+- [🇬 GitCode](https://GitCode.com/TimeRainStarSky/Yunzai-Windows-Installer/releases)
+
+</details>
+
 ## 使用教程
 
 1. 推荐安装插件(可选)
