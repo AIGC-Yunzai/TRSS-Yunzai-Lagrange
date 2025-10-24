@@ -1,6 +1,7 @@
 # Fork 概要
 
 - 仅针对 [Lagrange.Onebot v1](https://github.com/misaka20002/Lagrange.Core) 作适配器修改
+- 已适配 [napcat](https://napneko.github.io/guide/napcat)
 - 参考 [Lagrange.Core v1 开发文档](https://lagrange-onebot.apifox.cn/)
 
 ## 已调整适配器适配
