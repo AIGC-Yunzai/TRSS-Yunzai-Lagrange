@@ -127,6 +127,38 @@ Bot.adapter.push(
       )
     }
 
+    setEmojiLike(data, message_id, emoji_id) {
+      Bot.makeLog("info", `回应群消息：${this.makeLog(message_id)}`, `${data.emoji_id}`, true)
+      return data.bot.sendApi("set_msg_emoji_like", {
+        emoji_id: emoji_id,
+        message_id: message_id, 
+      })
+    }
+  
+    getAiCharacters(data, type) {
+      Bot.makeLog("info", `获取群${this.makeLog(data.group_id)}AI音色信息`, `${type}`, true)
+      return data.bot.sendApi("get_ai_characters", {
+        chat_type: type,
+        group_id: data.group_id, 
+      })
+    }
+  
+    sendGroupAiRecord(data, character_id, text) {
+      Bot.makeLog("info", `发送${this.makeLog(character_id)}语音`, `${data.self_id} => ${data.group_id}`, true)
+      return data.bot.sendApi("send_group_ai_record", {
+        character: character_id,
+        group_id: data.group_id, 
+        text:text
+      })
+    }
+  
+    async getLocalFileInfo(data, file_id) {
+      const msg = (await data.bot.sendApi("get_file", { file_id })).data
+      if (msg?.message)
+        msg.message = this.parseMsg(msg.message)
+      return msg
+    }
+
     sendGroupMsg(data, msg) {
       return this.sendMsg(
         msg,
@@ -775,6 +807,7 @@ Bot.adapter.push(
         thumbUp: this.sendLike.bind(this, i),
         delete: this.deleteFriend.bind(this, i),
         poke: this.sendFriendPoke.bind(this, user_id), // 匹配拉格朗日非 onebot11 规范的戳一戳（但当前版本的拉格朗日的戳一戳无法使用）
+        getLocalFileInfo: this.getLocalFileInfo.bind(this, i),
       }
     }
 
@@ -876,6 +909,10 @@ Bot.adapter.push(
         pickMember: this.pickMember.bind(this, i, group_id),
         // pokeMember: qq => this.sendGroupMsg(i, { type: "poke", qq }), // onebot11 规范的戳一戳
         pokeMember: this.sendGroupPoke.bind(this, i), // 匹配拉格朗日非 onebot11 规范的戳一戳（但当前版本的拉格朗日的戳一戳无法使用）
+        setEmojiLike: this.setEmojiLike.bind(this, i),
+        getAiCharacters: this.getAiCharacters.bind(this, i),
+        sendGroupAiRecord: this.sendGroupAiRecord.bind(this, i),
+        getLocalFileInfo: this.getLocalFileInfo.bind(this, i),
         setName: this.setGroupName.bind(this, i),
         setAvatar: this.setGroupAvatar.bind(this, i),
         setAdmin: this.setGroupAdmin.bind(this, i),
