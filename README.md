@@ -14,10 +14,10 @@
 | ~~sendGroupFile~~   | ~~upload_group_file~~   | ~~发送文件，适配 file 仅支持本地Path~~ |
 | pokeMember          | group_poke              | 群聊戳一戳                             |
 
-### 呆毛 Fork 版 Lagrange.Onebot
+~~### 呆毛 Fork 版 Lagrange.Onebot~~
 
-- 已经从源头（Lagrange.Onebot）上修复了 `upload_private_file` `upload_group_file` 文件 Base64 发送
-- 下载地址：[呆毛 Fork 版 Lagrange.Onebot](https://github.com/misaka20002/Lagrange.Core)
+~~- 已经从源头（Lagrange.Onebot）上修复了 `upload_private_file` `upload_group_file` 文件 Base64 发送~~
+~~- 下载地址：[呆毛 Fork 版 Lagrange.Onebot](https://github.com/misaka20002/Lagrange.Core)~~
 
 ## 已调整参数
 
