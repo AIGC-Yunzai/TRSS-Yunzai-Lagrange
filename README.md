@@ -1,8 +1,8 @@
 # Fork 概要
 
 - 仅针对 [Lagrange.Onebot v1](https://github.com/misaka20002/Lagrange.Core) 作适配器修改
-- 已适配 [napcat](https://napneko.github.io/guide/napcat)
-- 参考 [Lagrange.Core v1 开发文档](https://lagrange-onebot.apifox.cn/)
+- 已全面适配 [Napcat](https://napneko.github.io/guide/napcat)
+- 11月22日更新： 由于目前 Lagr 已经关闭签名服务器，推荐转移到纯本地签名的 Napcat 平台
 
 ## 已调整适配器适配
 
