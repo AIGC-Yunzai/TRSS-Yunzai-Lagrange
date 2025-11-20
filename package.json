@@ -19,9 +19,9 @@
     "art-template": "4.13.2",
     "chalk": "^5.6.2",
     "chokidar": "^4.0.3",
-    "es-toolkit": "^1.40.0",
+    "es-toolkit": "^1.42.0",
     "express": "^4.21.2",
-    "file-type": "^21.0.0",
+    "file-type": "^21.1.1",
     "https-proxy-agent": "^7.0.6",
     "image-size": "^2.0.2",
     "level": "^10.0.0",
@@ -33,10 +33,10 @@
     "node-schedule": "^2.1.1",
     "oicq": "link:lib/modules/oicq",
     "pm2": "^6.0.13",
-    "puppeteer": "*",
+    "puppeteer": "^24.30.0",
     "redis": "^4.7.1",
     "sequelize": "^6.37.7",
-    "sqlite3": "npm:@karinjs/sqlite3-cjs@0.1.0",
+    "sqlite3": "^5.1.7",
     "strip-ansi": "^7.1.2",
     "ulid": "^3.0.1",
     "ws": "^8.18.3",
@@ -52,7 +52,7 @@
   },
   "pnpm": {
     "onlyBuiltDependencies": [
-      "@karinjs/sqlite3-cjs",
+      "sqlite3",
       "classic-level",
       "log4js",
       "puppeteer",
@@ -60,8 +60,7 @@
     ],
     "patchedDependencies": {
       "log4js": "lib/modules/log4js.patch",
-      "streamroller": "lib/modules/streamroller.patch",
-      "@karinjs/sqlite3-cjs": "lib/modules/sqlite3.patch"
+      "streamroller": "lib/modules/streamroller.patch"
     }
   }
 }
