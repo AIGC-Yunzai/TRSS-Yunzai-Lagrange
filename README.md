@@ -8,11 +8,11 @@
 
 | method              | api                     | about                                  |
 | ------------------- | ----------------------- | -------------------------------------- |
+| pokeMember          | group_poke              | 群聊戳一戳                             |
 | getFriendMsgHistory | get_friend_msg_history  | 适配 message_id 以获取历史消息         |
 | getGroupMsgHistory  | get_group_msg_history   | 适配 message_id 以获取历史消息         |
 | ~~sendFriendFile~~  | ~~upload_private_file~~ | ~~发送文件，适配 file 仅支持本地Path~~ |
 | ~~sendGroupFile~~   | ~~upload_group_file~~   | ~~发送文件，适配 file 仅支持本地Path~~ |
-| pokeMember          | group_poke              | 群聊戳一戳                             |
 
 ~~### 呆毛 Fork 版 Lagrange.Onebot~~
 
@@ -30,6 +30,17 @@
 | parameter | about                                                                              |
 | --------- | ---------------------------------------------------------------------------------- |
 | e.reply   | (msg, quote, { recallMsg, at }) recallMsg: Bot定时撤回回复消息时将不会撤回命令消息 |
+
+## 已增加的 NapCat Onebot Api
+
+| method                | api               | about                |
+| --------------------- | ----------------- | -------------------- |
+| setEmojiLike[^1]      | setEmojiLike      | 贴标签(设置表情点赞) |
+| getAiCharacters[^1]   | getAiCharacters   | 获取群AI音色信息     |
+| sendGroupAiRecord[^1] | sendGroupAiRecord | 获发送群AI语音       |
+| getLocalFileInfo[^1]  | getLocalFileInfo  | 获取文件信息         |
+
+[^1]: 由 [@127Wzc](https://github.com/127Wzc) 贡献添加
 
 ## Fix bug
 
