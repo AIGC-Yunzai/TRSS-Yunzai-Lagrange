@@ -34,7 +34,7 @@ export class status extends plugin {
       this.botTime() +
       (await this.count())
 
-    return this.reply(Bot.makeForwardArray([msg, this.pluginTime()]))
+    return this.reply(Bot.makeForwardArray([msg, this.pluginTime(), this.otherHelp()]))
   }
 
   botTime() {
@@ -49,6 +49,12 @@ export class status extends plugin {
     let msg = "插件加载用时"
     for (const i in PluginsLoader.load_time)
       msg += `\n${Bot.getTimeDiff(0, PluginsLoader.load_time[i])} ${i}`
+    return msg
+  }
+
+  otherHelp() {
+    let msg = "其他指令："
+    msg += "\n #发言榜[num天]"
     return msg
   }
 
