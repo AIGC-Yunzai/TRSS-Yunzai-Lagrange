@@ -9,18 +9,22 @@ export class speakRank extends plugin {
       event: "message",
       rule: [
         {
-          reg: "^#发言榜((\\d+)天)?",
+          reg: "^#发言榜",
           fnc: "speakRank",
         },
       ],
     })
   }
 
-  /** "^#发言榜((\\d+)天)?" */
+  /** "^#发言榜" */
   async speakRank() {
     // 默认配置
-    const rankCount = 20
+    /** 发送图片还是合并转发 */
     const sendAsImage = true
+    /** 统计天数 */
+    let days = 7
+    /** 排名人数 */
+    let rankCount = 20
 
     // 获取群消息统计数据
     const groupId = this.e.group_id
@@ -29,12 +33,20 @@ export class speakRank extends plugin {
     }
 
     // 解析天数参数，默认7天
-    let days = 7
-    const match = this.e.msg.match(/^#发言榜((\d+)天)?/)
-    if (match && match[2]) {
-      days = parseInt(match[2])
+    const matchDays = this.e.msg.match(/(\d+)天/)
+    if (matchDays && matchDays[1]) {
+      days = parseInt(matchDays[1])
       if (days <= 0 || days > 365) {
         return this.reply("[发言榜]天数范围应在 1-365 之间")
+      }
+    }
+
+    // 解析人数参数，默认20人
+    const matchCount = this.e.msg.match(/(\d+)人/)
+    if (matchCount && matchCount[1]) {
+      rankCount = parseInt(matchCount[1])
+      if (rankCount <= 0 || rankCount > 100) {
+        return this.reply("[发言榜]人数范围应在 1-100 之间")
       }
     }
 

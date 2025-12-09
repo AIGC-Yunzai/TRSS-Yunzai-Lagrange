@@ -54,7 +54,7 @@ export class status extends plugin {
 
   otherHelp() {
     let msg = "其他指令："
-    msg += "\n #发言榜[num天]"
+    msg += "\n #发言榜[num天][num人]"
     return msg
   }
 
