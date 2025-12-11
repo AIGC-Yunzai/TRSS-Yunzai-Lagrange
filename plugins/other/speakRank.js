@@ -1,5 +1,7 @@
 import moment from "moment"
-import puppeteer from "puppeteer"
+import puppeteer from "../../lib/puppeteer/puppeteer.js"
+
+const _path = process.cwd()
 
 export class speakRank extends plugin {
   constructor() {
@@ -9,7 +11,7 @@ export class speakRank extends plugin {
       event: "message",
       rule: [
         {
-          reg: "^#发言榜",
+          reg: "^#发言(排行)?榜",
           fnc: "speakRank",
         },
       ],
@@ -76,6 +78,17 @@ export class speakRank extends plugin {
       return this.reply("[发言榜]无法获取群成员列表")
     }
 
+    // 获取群名
+    let groupName = groupId
+    if (this.e.group) {
+      try {
+        const info = await this.e.group.getInfo()
+        groupName = info.group_name || groupId
+      } catch (e) {
+        logger.warn("[发言榜]获取群信息失败", e)
+      }
+    }
+
     // 获取每个群成员在指定日期的发言记录
     for (const userId of memberList) {
       for (const date of dates) {
@@ -137,8 +150,9 @@ export class speakRank extends plugin {
 
     if (sendAsImage) {
       // 生成图片
-      const imgPath = await this.generateRankImage(rankData, rankCount, totalMessages, groupId, days)
-      return this.reply(segment.image(imgPath))
+      const img = await this.generateRankImage(rankData, rankCount, totalMessages, groupId, days, this.e.user_id, groupName)
+      if (!img) return false
+      return this.reply(img)
     } else {
       // 发送文本
       const topUsers = rankData.slice(0, rankCount)
@@ -154,292 +168,77 @@ export class speakRank extends plugin {
     }
   }
 
-  async generateRankImage(rankData, rankCount, totalMessages, groupId, days) {
+  async generateRankImage(rankData, rankCount, totalMessages, groupId, days, currentUserId, groupName) {
     const topUsers = rankData.slice(0, rankCount)
+    const dateStr = moment().format("YYYY-MM-DD HH:mm")
 
-    // 获取群名
-    let groupName = groupId
-    if (this.e.group) {
-      try {
-        const info = await this.e.group.getInfo()
-        groupName = info.group_name || groupId
-      } catch (e) {
-        logger.warn("[发言榜]获取群信息失败", e)
-      }
-    }
-
-    // 构建HTML
-    let htmlTemplate = `
-<html>
-  <head>
-    <style>
-      * { 
-        margin: 0; 
-        padding: 0; 
-        box-sizing: border-box; 
-      }
-      body {
-        background: linear-gradient(135deg, #fafafa 0%, #f5f5f7 100%);
-        padding: 48px 40px;
-        font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-      }
-      .container {
-        max-width: 900px;
-        margin: 0 auto;
-      }
-      .title-section {
-        text-align: center;
-        margin-bottom: 48px;
-      }
-      .main-title {
-        font-size: 56px;
-        font-weight: 700;
-        background: linear-gradient(135deg, #1d1d1f 0%, #494949 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        letter-spacing: -1.5px;
-        margin-bottom: 12px;
-        line-height: 1.1;
-      }
-      .subtitle {
-        font-size: 21px;
-        color: #1d1d1f;
-        font-weight: 600;
-        margin-bottom: 8px;
-        letter-spacing: -0.3px;
-      }
-      .group-id {
-        font-size: 15px;
-        color: #86868b;
-        font-weight: 400;
-      }
-      .stats-bar {
-        background: linear-gradient(135deg, #ffffff 0%, #fafafa 100%);
-        border-radius: 20px;
-        padding: 24px 32px;
-        margin-bottom: 20px;
-        display: flex;
-        justify-content: space-around;
-        align-items: center;
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.04);
-        border: 0.5px solid rgba(0, 0, 0, 0.04);
-      }
-      .stats-item {
-        text-align: center;
-        flex: 1;
-      }
-      .stats-label {
-        font-size: 13px;
-        color: #86868b;
-        font-weight: 500;
-        margin-bottom: 6px;
-        letter-spacing: 0.3px;
-        text-transform: uppercase;
-      }
-      .stats-value {
-        font-size: 32px;
-        font-weight: 700;
-        background: linear-gradient(135deg, #007aff 0%, #0051d5 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        letter-spacing: -0.5px;
-      }
-      .user-list {
-        background: linear-gradient(135deg, #ffffff 0%, #fafafa 100%);
-        border-radius: 20px;
-        overflow: hidden;
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.04);
-        border: 0.5px solid rgba(0, 0, 0, 0.04);
-      }
-      .user-item {
-        display: flex;
-        align-items: center;
-        padding: 18px 24px;
-        border-bottom: 0.5px solid rgba(0, 0, 0, 0.06);
-        background: transparent;
-      }
-      .user-item:last-child {
-        border-bottom: none;
-      }
-      .user-item-highlight {
-        display: flex;
-        align-items: center;
-        padding: 18px 24px;
-        border-bottom: 0.5px solid rgba(0, 0, 0, 0.06);
-        background: linear-gradient(90deg, rgba(0, 122, 255, 0.08) 0%, rgba(0, 122, 255, 0.02) 100%);
-        position: relative;
-      }
-      .user-item-highlight::before {
-        content: '';
-        position: absolute;
-        left: 0;
-        top: 0;
-        bottom: 0;
-        width: 4px;
-        background: linear-gradient(180deg, #007aff 0%, #0051d5 100%);
-      }
-      .user-item-highlight:last-child {
-        border-bottom: none;
-      }
-      .rank {
-        width: 48px;
-        font-size: 22px;
-        font-weight: 700;
-        color: #86868b;
-        text-align: center;
-        flex-shrink: 0;
-      }
-      .rank-top {
-        background: linear-gradient(135deg, #007aff 0%, #0051d5 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        font-size: 24px;
-      }
-      .avatar {
-        width: 60px;
-        height: 60px;
-        border-radius: 50%;
-        margin: 0 18px;
-        flex-shrink: 0;
-        background: linear-gradient(135deg, #f5f5f7 0%, #e8e8ed 100%);
-        border: 2px solid rgba(255, 255, 255, 0.8);
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-      }
-      .info {
-        flex: 1;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        min-width: 0;
-      }
-      .name-section {
-        flex: 1;
-        min-width: 0;
-        padding-right: 20px;
-      }
-      .nickname {
-        font-size: 18px;
-        color: #1d1d1f;
-        font-weight: 600;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        letter-spacing: -0.2px;
-      }
-      .stats {
-        text-align: right;
-        flex-shrink: 0;
-      }
-      .count {
-        font-size: 22px;
-        color: #1d1d1f;
-        font-weight: 700;
-        margin-bottom: 2px;
-        letter-spacing: -0.3px;
-      }
-      .percentage {
-        font-size: 13px;
-        color: #86868b;
-        font-weight: 500;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="container">
-      <div class="title-section">
-        <div class="main-title">发言榜</div>
-        <div class="subtitle">${groupName}</div>
-        <div class="group-id">群号 ${groupId}</div>
-      </div>
-      <div class="stats-bar">
-        <div class="stats-item">
-          <div class="stats-label">Days</div>
-          <div class="stats-value">${days}</div>
-        </div>
-        <div class="stats-item">
-          <div class="stats-label">Messages</div>
-          <div class="stats-value">${totalMessages}</div>
-        </div>
-        <div class="stats-item">
-          <div class="stats-label">Users</div>
-          <div class="stats-value">${rankData.length}</div>
-        </div>
-      </div>
-      <div class="user-list">`
-
+    // 构建排名项 HTML
+    let rankItems = ""
     for (let i = 0; i < topUsers.length; i++) {
       const user = topUsers[i]
-      const percentage = ((user.total / totalMessages) * 100).toFixed(2)
-      const isCurrentUser = user.userId == this.e.user_id
-      const itemClass = isCurrentUser ? "user-item-highlight" : "user-item"
-      const rankClass = i < 3 ? "rank rank-top" : "rank"
+      const percentage = ((user.total / totalMessages) * 100).toFixed(1)
 
-      htmlTemplate += `
+      let rankHtml = `<div class="rank-num" data-rank="#${i + 1}"></div>`
+      let itemClass = "item"
+      let barColor = "#9f7aea"
+
+      if (user.userId == currentUserId) {
+        itemClass += " highlight"
+      }
+
+      if (i === 0) {
+        rankHtml = `<div class="rank rank-1">🥇</div>`
+        itemClass += " top-3 top-1"
+        barColor = "linear-gradient(90deg, #ecc94b 0%, #f6e05e 100%)"
+      } else if (i === 1) {
+        rankHtml = `<div class="rank rank-2">🥈</div>`
+        itemClass += " top-3"
+        barColor = "linear-gradient(90deg, #a0aec0 0%, #cbd5e0 100%)"
+      } else if (i === 2) {
+        rankHtml = `<div class="rank rank-3">🥉</div>`
+        itemClass += " top-3"
+        barColor = "linear-gradient(90deg, #ed8936 0%, #f6ad55 100%)"
+      }
+
+      rankItems += `
         <div class="${itemClass}">
-          <div class="${rankClass}">${i + 1}</div>
+          ${rankHtml}
           <img class="avatar" src="https://q1.qlogo.cn/g?b=qq&nk=${user.userId}&s=640" />
           <div class="info">
-            <div class="name-section">
+            <div class="name-row">
               <div class="nickname">${user.nickname}</div>
+              <div class="percent-tag">${percentage}%</div>
             </div>
-            <div class="stats">
-              <div class="count">${user.total}</div>
-              <div class="percentage">${percentage}%</div>
+            <div class="progress-bg">
+              <div class="progress-bar" style="width: ${percentage}%; background: ${barColor}"></div>
             </div>
+          </div>
+          <div class="count-col">
+            <span class="count-val">${user.total}</span>
+            <span class="count-lbl">条</span>
           </div>
         </div>`
     }
 
-    htmlTemplate += `
-      </div>
-    </div>
-  </body>
-</html>`
-
-    // 启动浏览器生成图片
-    const browser = await puppeteer.launch({
-      headless: "new",
-      args: ['--no-sandbox', '--disable-setuid-sandbox']
-    })
-    const page = await browser.newPage()
-
-    await page.setViewport({ width: 900, height: 1 })
-    await page.setContent(htmlTemplate.replace(/[\n\t]/g, ''), {
-      waitUntil: 'networkidle0'
-    })
-
-    // 等待头像加载
-    try {
-      logger.info(`[发言榜]正在等待用户头像加载`)
-      await page.waitForFunction(() => {
-        const avatars = Array.from(document.querySelectorAll('img.avatar'))
-        return avatars.every(img => img.complete && img.naturalWidth > 0)
-      }, {
-        timeout: 5000,
-        polling: 200
-      })
-    } catch (err) {
-      logger.warn(`[发言榜]头像加载超时: ${err}`)
+    const data = {
+      _path,
+      tplFile: "./plugins/other/resources/speakRank.html",
+      rankCount,
+      days,
+      dateStr,
+      rankItems,
+      totalMessages,
+      totalUsers: rankData.length,
+      groupName
     }
 
-    // 动态调整页面高度
-    const bodyHeight = await page.evaluate(() => {
-      return document.body.scrollHeight
-    })
-    await page.setViewport({ width: 900, height: bodyHeight })
+    const img = await puppeteer.screenshot("speakRank", data)
 
-    // 截图
-    const screenshotPath = `./temp/speak_rank_${groupId}_${Date.now()}.png`
-    await page.screenshot({
-      path: screenshotPath
-    })
+    if (!img) {
+      logger.error("[发言榜]图片生成失败")
+      return false
+    }
 
-    await browser.close()
-    return screenshotPath
+    return img
   }
 }
