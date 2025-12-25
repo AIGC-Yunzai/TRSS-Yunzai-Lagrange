@@ -46,6 +46,10 @@
 
 - 修复锅巴设置中当插件的配置文件超过 1mb 时保存失败（PayloadTooLargeError）
 
+## Add 新功能
+
+- `#发言榜`
+
 
 # 安装方法
 
@@ -62,6 +66,7 @@ git remote set-url origin https://github.com/AIGC-Yunzai/TRSS-Yunzai-Lagrange.gi
 # git remote set-url origin https://ghfast.top/https://github.com/AIGC-Yunzai/TRSS-Yunzai-Lagrange.git
 git fetch --all
 git reset --hard origin/main
+pnpm i
 ```
 
 ### 方法三 直接替换文件
